@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        <!-- Enlace al archivo templatemo_style.css -->
+        <link rel="stylesheet" type="text/css" href="http://localhost:8000/formulario.css">
+    {% endblock %}
+
+    {% block javascripts %}
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+        <div id="form_container">
+            {{ form_start(form) }}
+            <div>
+                <h2>Insert Empleado</h2>
+            </div>
+
+              <div class="form-group">
+                <label for="{{ form.pagos_no.vars.id }}">pagos_no:</label>
+                {{ form_widget(form.pagos_no, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+                {{ form_errors(form.pagos_no) }}
+            </div>
+ 
+
+            <div class="form-group">
+                <label for="{{ form.pedido_fecha.vars.id }}">pedido_fecha:</label>
+                {{ form_widget(form.pedido_fecha, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+                {{ form_errors(form.pedido_fecha) }}
+            </div>
+
+        
+
+            <div class="form-group">
+                <label for="{{ form.pedido_tipo.vars.id }}">pedido_tipo:</label>
+                {{ form_widget(form.pedido_tipo, {'attr': {'class': 'form-control', 'placeholder': 'Enter your occupation'}}) }}
+                {{ form_errors(form.pedido_tipo) }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.fecha_envio.vars.id }}">fecha_envio:</label>
+                {{ form_widget(form.fecha_envio, {'attr': {'class': 'form-control', 'placeholder': 'Enter your boss'}}) }}
+                {{ form_errors(form.fecha_envio) }}
+            </div>
+
+             <div class="form-group">
+                <label for="{{ form.total.vars.id }}">total:</label>
+                {{ form_widget(form.total, {'attr': {'class': 'form-control', 'placeholder': 'Enter your boss'}}) }}
+                {{ form_errors(form.total) }}
+            </div>
+
+            {{ form_row(form.submit) }}
+
+            {{ form_end(form) }}
+        </div>
+    {% endblock %}
+</body>
+</html>

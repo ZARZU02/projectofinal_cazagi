@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        <!-- Enlace al archivo templatemo_style.css -->
+        <link rel="stylesheet" type="text/css" href="http://localhost:8000/formulario.css">
+    {% endblock %}
+
+    {% block javascripts %}
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+        <div id="form_container">
+            {{ form_start(form) }}
+            <div>
+                <h2>Insert Empleado</h2>
+            </div>
+
+        
+ 
+
+            <div class="form-group">
+                <label for="{{ form.apellidos.vars.id }}">apellidos:</label>
+                {{ form_widget(form.apellidos, {'attr': {'class': 'form-control', 'placeholder': 'Enter your last name'}}) }}
+                {{ form_errors(form.apellidos) }}
+            </div>
+
+        
+
+            <div class="form-group">
+                <label for="{{ form.oficio.vars.id }}">oficio:</label>
+                {{ form_widget(form.oficio, {'attr': {'class': 'form-control', 'placeholder': 'Enter your occupation'}}) }}
+                {{ form_errors(form.oficio) }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.jefe.vars.id }}">jefe:</label>
+                {{ form_widget(form.jefe, {'attr': {'class': 'form-control', 'placeholder': 'Enter your boss'}}) }}
+                {{ form_errors(form.jefe) }}
+            </div>
+
+            {{ form_row(form.submit) }}
+
+            {{ form_end(form) }}
+        </div>
+    {% endblock %}
+</body>
+</html>
