@@ -14,36 +14,21 @@ class Contactos
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $tipo = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $valor = null;
+    private ?string $nombre = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTipo(): ?string
+    public function getNombre(): ?string
     {
-        return $this->tipo;
+        return $this->nombre;
     }
 
-    public function setTipo(string $tipo): static
+    public function setNombre(string $nombre): static
     {
-        $this->tipo = $tipo;
-
-        return $this;
-    }
-
-    public function getValor(): ?string
-    {
-        return $this->valor;
-    }
-
-    public function setValor(string $valor): static
-    {
-        $this->valor = $valor;
+        $this->nombre = $nombre;
 
         return $this;
     }

@@ -5,14 +5,18 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 
 class RegistrationController extends AbstractController
 {
+
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
@@ -21,7 +25,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+            // Codificar la contraseña
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -29,14 +33,34 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            // Guardar otros campos del formulario en la entidad User
+            $user->setDireccion($form->get('direccion')->getData());
+            $user->setTelefono($form->get('telefono')->getData());
+            $user->setNombre($form->get('nombre')->getData());
+            $user->setApellidos($form->get('apellidos')->getData());
+
+            // Asignar roles al usuario
+            $roles = ['ROLE_USER']; // Por defecto, todos los usuarios tienen el rol ROLE_USER
+            if ($form->get('roles')->getData()) {
+                $roles = $form->get('roles')->getData();
+            }
+            $user->setRoles($roles);
+             
+
+            // Aquí es donde obtenemos el valor del campo 'deportes' y lo guardamos en la entidad User
+            $deportes = $form->get('deportes')->getData();
+            $user->setDeportes($deportes);
+
+            // Persistir el usuario en la base de datos
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_cliente');
+            // Redirigir al usuario a la página de inicio de sesión
+            return $this->redirectToRoute('app_inicio');
         }
 
-        return $this->render('register.html.twig', [
+        // Si el formulario no ha sido enviado o no es válido, renderizar el formulario de registro
+        return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }

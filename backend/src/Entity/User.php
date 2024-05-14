@@ -5,12 +5,15 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,7 +30,23 @@ class User
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    private ?string $password = '';
+
+    #[ORM\Column(length: 255)]
+    private ?string $direccion = null;
+
+    #[ORM\Column]
+    private ?int $telefono = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nombre = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $apellidos = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Deportes = null;
+
 
     public function getId(): ?int
     {
@@ -51,10 +70,12 @@ class User
      *
      * @see UserInterface
      */
+
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email ?? '';
     }
+
 
     /**
      * @see UserInterface
@@ -68,9 +89,9 @@ class User
         return array_unique($roles);
     }
 
-    public function setRoles($roles): static
+    public function setRoles(array $roles): static
     {
-        $this->roles[] = $roles;
+        $this->roles = $roles;
 
         return $this;
     }
@@ -83,14 +104,85 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
-        $this->password = $password;
+        if ($password !== null) {
+            $this->password = $password;
+        }
 
         return $this;
     }
 
-   
 
-  
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getDireccion(): ?string
+    {
+        return $this->direccion;
+    }
+
+    public function setDireccion(string $direccion): static
+    {
+        $this->direccion = $direccion;
+
+        return $this;
+    }
+
+    public function getTelefono(): ?int
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono(int $telefono): static
+    {
+        $this->telefono = $telefono;
+
+        return $this;
+    }
+
+
+
+    public function getNombre(): ?string
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(string $nombre): static
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getApellidos(): ?string
+    {
+        return $this->apellidos;
+    }
+
+    public function setApellidos(string $apellidos): static
+    {
+        $this->apellidos = $apellidos;
+
+        return $this;
+    }
+
+    public function getDeportes(): ?string
+    {
+        return $this->Deportes;
+    }
+
+    public function setDeportes(string $Deportes): static
+    {
+        $this->Deportes = $Deportes;
+
+        return $this;
+    }
+
 }

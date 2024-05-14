@@ -6,11 +6,14 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -18,33 +21,61 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
+            ->add('nombre', TextType::class, [
+                'label' => 'Nombre',
+            ])
+            ->add('apellidos', TextType::class, [
+                'label' => 'Apellidos',
+            ])
+            ->add('telefono', TextType::class, [
+                'label' => 'Teléfono',
+            ])
+            ->add('direccion', TextType::class, [
+                'label' => 'Dirección',
+            ]) 
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Roles',
+                'choices' => [
+                    'Usuario' => 'ROLE_USER',
+                    'Administrador' => 'ROLE_ADMIN',
                 ],
+                'multiple' => true, // Para permitir múltiples selecciones de roles
+                'expanded' => true, // Para mostrar los roles como botones de opción
+                'required' => true,
             ])
             ->add('plainPassword', PasswordType::class, [
-                                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Por favor, introduce una contraseña',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
+                        'minMessage' => 'Tu contraseña debe tener al menos {{ limit }} caracteres',
                         'max' => 4096,
                     ]),
                 ],
+                'label' => 'Contraseña',
             ])
-        ;
+            ->add('deportes', ChoiceType::class, [ 
+                'label' => 'Deportes',
+                'choices' => [
+                    'Body Combat' => 'Body Combat',
+                    'Yoga' => 'Yoga',
+                    'Cycling' => 'Ciclismo',
+                    'Boxing' => 'Boxeo',
+                    'Swimming' => 'Natación',
+                    'Massage' => 'Masaje',
+                    'Todos' => 'Todos',
+                ],
+            ]); 
+
+            
+            
+            
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

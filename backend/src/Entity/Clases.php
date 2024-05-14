@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClasesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,68 +16,125 @@ class Clases
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nombre = null;
+ 
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dia = null;
+    #[ORM\Column(length: 255)]
+    private ?string $deporte = null;
+
+
+
+
+
+    #[ORM\Column(length: 255)]
+    private ?string $entrenador = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $dia = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $hora = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $hora_fin = null;
+    #[ORM\ManyToMany(targetEntity: Alumnos::class, inversedBy: 'clase_deporte')]
+    private Collection $deporte_alumnos;
+
+    public function __construct()
+    {
+        $this->deporte_alumnos = new ArrayCollection();
+    }
+
+
+ 
+
+
+   
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNombre(): ?string
+ 
+
+
+
+  
+
+    public function getDeporte(): ?string
     {
-        return $this->nombre;
+        return $this->deporte;
     }
 
-    public function setNombre(string $nombre): static
+    public function setDeporte(string $deporte): static
     {
-        $this->nombre = $nombre;
+        $this->deporte = $deporte;
 
         return $this;
     }
 
-    public function getDia(): ?\DateTimeInterface
+  
+
+   
+
+    public function getEntrenador(): ?string
+    {
+        return $this->entrenador;
+    }
+
+    public function setEntrenador(string $entrenador): static
+    {
+        $this->entrenador = $entrenador;
+
+        return $this;
+    }
+
+    public function getDia(): ?string
     {
         return $this->dia;
     }
 
-    public function setDia(\DateTimeInterface $dia): static
+    public function setDia(string $dia): static
     {
         $this->dia = $dia;
 
         return $this;
     }
 
-    public function getHora_inicio(): ?\DateTimeInterface
+    public function getHora(): ?\DateTimeInterface
     {
         return $this->hora;
     }
 
-    public function setHora_inicio(\DateTimeInterface $hora): static
+    public function setHora(\DateTimeInterface $hora): static
     {
         $this->hora = $hora;
 
         return $this;
     }
 
-    public function getHoraFin(): ?\DateTimeInterface
+    /**
+     * @return Collection<int, Alumnos>
+     */
+    public function getDeporteAlumnos(): Collection
     {
-        return $this->hora_fin;
+        return $this->deporte_alumnos;
     }
 
-    public function setHoraFin(\DateTimeInterface $hora_fin): static
+    public function addDeporteAlumno(Alumnos $deporteAlumno): static
     {
-        $this->hora_fin = $hora_fin;
+        if (!$this->deporte_alumnos->contains($deporteAlumno)) {
+            $this->deporte_alumnos->add($deporteAlumno);
+        }
 
         return $this;
     }
+
+    public function removeDeporteAlumno(Alumnos $deporteAlumno): static
+    {
+        $this->deporte_alumnos->removeElement($deporteAlumno);
+
+        return $this;
+    }
+
+   
+    
 }

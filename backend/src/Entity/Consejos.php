@@ -16,11 +16,15 @@ class Consejos
     #[ORM\Column(length: 255)]
     private ?string $titulo = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $descripcion = null;
+    #[ORM\Column(length: 10000)]
+    private ?string $Descripcion = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $tipo = null;
+
+
+
+
+
+
 
     public function getId(): ?int
     {
@@ -41,25 +45,20 @@ class Consejos
 
     public function getDescripcion(): ?string
     {
-        return $this->descripcion;
+        return $this->Descripcion;
     }
 
-    public function setDescripcion(string $descripcion): static
+    public function setDescripcion(string $Descripcion): static
     {
-        $this->descripcion = $descripcion;
+        $this->Descripcion = $Descripcion;
 
         return $this;
     }
 
-    public function getTipo(): ?string
-    {
-        return $this->tipo;
-    }
 
-    public function setTipo(string $tipo): static
-    {
-        $this->tipo = $tipo;
+   
 
-        return $this;
-    }
+ 
+
+
 }

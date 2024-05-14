@@ -1,16 +1,15 @@
 <?php
-// src/Controller/ProductController.php
+// src/Controller/ConsejosController.php
+
 namespace App\Controller;
 
-// ...
 use App\Entity\Consejos;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\ConsejosType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
 
 class ConsejosController extends AbstractController
 {
@@ -21,35 +20,36 @@ class ConsejosController extends AbstractController
         $this->em = $em;
     }
 
-
-    #[Route('/consejos', name: 'app_consejos ')]
-    public function indexcomunidad(): Response
-    {
-        $clienteRepository = $this->em->getRepository(Consejos::class);
+    #[Route('/consejos', name: 'app_consejos')]
+    public function indexconsejos(): Response
+    {  
+        $ConsejosRepository = $this->em->getRepository(Consejos::class);
+        $consejos = $ConsejosRepository->findAll();
         return $this->render('consejos.html.twig', [
-            "resultados" => $clienteRepository->findAll()
+            "resultados" => $ConsejosRepository->findAll(),
+            "consejos" => $consejos
         ]);
     }
 
-   /* #[Route('/empleado/delete/{id}', name: 'empleado_delete')]
-    public function deleteemp(EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/consejos/delete/{id}', name: 'consejos_delete')]
+    public function deleteconsejos(EntityManagerInterface $entityManager, int $id): Response
     {
-        $empleado = $entityManager->getRepository(Empleado::class)->find($id);
+        $consejos = $entityManager->getRepository(Consejos::class)->find($id);
 
-        if (!$empleado) {
+        if (!$consejos) {
             throw $this->createNotFoundException(
-                'No empleado found for id ' . $id
+                'No user found for id ' . $id
             );
         }
 
         try {
-            $entityManager->remove($empleado);
+            $entityManager->remove($consejos);
             $entityManager->flush();
-            header("Location: http://localhost:8000/");
+            header("Location: http://localhost:8000/consejos");
             exit;
         } catch (\Exception $e) {
             // Si ocurre un error al intentar eliminar la entidad
-            $errorMessage = "No se pudo eliminar el dept porque hay una relacion." ;
+            $errorMessage = "No se pudo eliminar el usuario porque hay una relacion." ;
             
             // Imprimir el mensaje de error en lugar de redirigir
             echo $errorMessage;
@@ -58,129 +58,35 @@ class ConsejosController extends AbstractController
 
     }
 
-    #[Route('/insert/emp', name: 'ap_empleado')]
-    public function indiceemp(Request $request): Response
+    
+    #[Route('/consejos/edit/{id}', name: 'consejos_edit')]
+    public function updateconsejos(EntityManagerInterface $entityManager,Request $request, int $id): Response
     {
-        $empleado = new Empleado();
-        $form = $this->createForm(EmpleadoType::class, $empleado);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($empleado);
-            $this->em->flush();
-            header("Location: http://localhost:8000/");
-            exit;
-        }
+        $Consejos = $entityManager->getRepository(Consejos::class)->find($id);
 
-        return $this->render('insertemp.html.twig', [
-            'form' => $form->createView()
-            
-        ]);
-      
-       
-    }
-    #[Route('/empleado/edit/{id}', name: 'empleado_edit')]
-    public function updateemp(EntityManagerInterface $entityManager,Request $request, int $id): Response
-    {
-        $empleado = $entityManager->getRepository(Empleado::class)->find($id);
-
-        if (!$empleado) {
+        if (!$Consejos) {
             throw $this->createNotFoundException(
                 'No empleado found for id ' . $id
             );
         }
 
-        $empleado->setApellidos('New empleado name!'); // Replace setSomeProperty() with an actual setter method.
+        $Consejos->setTitulo('New Consejos name!'); // Replace setSomeProperty() with an actual setter method.
         $entityManager->flush();
-        $form = $this->createForm(EmpleadoType::class, $empleado); // Assuming you have an EmpleadoType form class
+        $form = $this->createForm(ConsejosType::class, $Consejos); // Assuming you have an EmpleadoType form class
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($empleado);
+            $entityManager->persist($Consejos);
             $entityManager->flush();
-            header("Location: http://localhost:8000/");
+            header("Location:http://localhost:8000/consejos");
             exit;
         }
 
-        return $this->render('updateemp.html.twig', [
+        return $this->render('editconsejos.html.twig', [
             'form' => $form->createView(),
         ]);
        
       
     }
-
-    #[Route('/pagos', name: 'app_cliente')]
-    public function indexpagos(EntityManagerInterface $entityManager): Response
-    {
-        
-        $pagos = $entityManager->getRepository(Pagos::class)->findAll();
-        
-        $result = []; // Initialize the $result array
-
-        for ($i = 0; $i < count($pagos); $i++) {
-            if(!empty($pagos[$i]->getPagosNo())) { // Si no tenemos un conjunto de departamentos, no mostramos el empleado
-                $result[] = $pagos[$i];
-            }
-        }
-        /*for ($i = 0; $i < count($product); $i++) {
-            $dept = $entityManager->getRepository(Dept::class)->find($product[$i]->getDeptNo());
-            $product[$i]->setDeptNombre($dept->getDnombre());
-            $result[] = $product[$i];
-        }
-        return $this->render('pagos.html', [
-            "resultados" => $result,
-            'result' => $pagos,
-        ]);
-
-    }
-
-    #[Route('/insert/pagos', name: 'ap_empleado')]
-    public function indicepagos(Request $request): Response
-    {
-        $pagos = new Pagos();
-        $form = $this->createForm(PagosType::class, $pagos);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($pagos);
-            $this->em->flush();
-            header("Location: http://localhost:8000/pagos");
-            exit;
-        }
-
-        return $this->render('insertpagos.html.twig', [
-            'form' => $form->createView()
-            
-        ]);
-      
-       
-    }
-   
-    #[Route('/pagos/edit/{id}', name: 'pagos_edit')]
-    public function updatepagos(EntityManagerInterface $entityManager,Request $request, int $id): Response
-    {
-        $pagos = $entityManager->getRepository(Pagos::class)->find($id);
-
-        if (!$pagos) {
-            throw $this->createNotFoundException(
-                'No empleado found for id ' . $id
-            );
-        }
-
-        $pagos ->setPedidoFecha('New pagos fecha!'); // Replace setSomeProperty() with an actual setter method.
-        $entityManager->flush();
-        $form = $this->createForm(PagosType::class, $pagos ); // Assuming you have an EmpleadoType form class
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($pagos);
-            $entityManager->flush();
-            header("Location: http://localhost:8000/pagos");
-            exit;
-        }
-
-        return $this->render('updatepagos.html.twig', [
-            'form' => $form->createView(),
-        ]);
-       
-      
-    }*/
+    
 }
