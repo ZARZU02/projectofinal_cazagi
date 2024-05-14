@@ -16,14 +16,8 @@ class Clases
     #[ORM\Column]
     private ?int $id = null;
 
- 
-
     #[ORM\Column(length: 255)]
     private ?string $deporte = null;
-
-
-
-
 
     #[ORM\Column(length: 255)]
     private ?string $entrenador = null;
@@ -34,13 +28,15 @@ class Clases
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $hora = null;
 
-    #[ORM\ManyToMany(targetEntity: Alumnos::class, inversedBy: 'clase_deporte')]
-    private Collection $deporte_alumnos;
+    #[ORM\OneToMany(mappedBy: 'clase', targetEntity: Alumnos::class)]
+    private Collection $alumnos;
 
     public function __construct()
     {
-        $this->deporte_alumnos = new ArrayCollection();
+        $this->alumnos = new ArrayCollection();
     }
+
+
 
 
  
@@ -114,26 +110,34 @@ class Clases
     /**
      * @return Collection<int, Alumnos>
      */
-    public function getDeporteAlumnos(): Collection
+    public function getAlumnos(): Collection
     {
-        return $this->deporte_alumnos;
+        return $this->alumnos;
     }
 
-    public function addDeporteAlumno(Alumnos $deporteAlumno): static
+    public function addAlumno(Alumnos $alumno): static
     {
-        if (!$this->deporte_alumnos->contains($deporteAlumno)) {
-            $this->deporte_alumnos->add($deporteAlumno);
+        if (!$this->alumnos->contains($alumno)) {
+            $this->alumnos->add($alumno);
+            $alumno->setClase($this);
         }
 
         return $this;
     }
 
-    public function removeDeporteAlumno(Alumnos $deporteAlumno): static
+    public function removeAlumno(Alumnos $alumno): static
     {
-        $this->deporte_alumnos->removeElement($deporteAlumno);
+        if ($this->alumnos->removeElement($alumno)) {
+            // set the owning side to null (unless already changed)
+            if ($alumno->getClase() === $this) {
+                $alumno->setClase(null);
+            }
+        }
 
         return $this;
     }
+
+
 
    
     
