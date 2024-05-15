@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Alumnos;
@@ -20,43 +21,40 @@ class FormularioAlumnoController extends AbstractController
     }
 
     #[Route('/formularioalumnos', name: 'app_formularioalumno')]
-    public function formularioalumnos(Request $request, EntityManagerInterface $entityManager): Response {
+    public function formularioalumnos(Request $request, EntityManagerInterface $entityManager): Response
+    {
         $alumno = new Alumnos();
         $form = $this->createForm(AlumnosType::class, $alumno);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $nombre = $form->get('nombre')->getData();
-            $apellidos = $form->get('apellidos')->getData();
-            $correo = $form->get('correo')->getData();
             $telefono = $form->get('telefono')->getData();
-            $deporte = $form->get('deportes')->getData();
-    
+            $correo = $form->get('correo')->getData();
+
             // Verificar si el alumno ya está inscrito en la misma clase
             $existingAlumno = $entityManager->getRepository(Alumnos::class)->findOneBy([
-               
                 'telefono' => $telefono,
                 'correo' => $correo,
             ]);
-    
+
             if ($existingAlumno) {
                 // Redirigir con un mensaje de error si ya está inscrito
                 $this->addFlash('error', 'Ya estás inscrito en esta clase.');
                 return $this->redirectToRoute('app_clases');
             }
-    
+
             // Persistir el objeto Alumno en la base de datos
             $entityManager->persist($alumno);
             $entityManager->flush();
-    
+
+            // Añadir mensaje de éxito
+            $this->addFlash('success', 'Te has apuntado correctamente.');
+
             return $this->redirectToRoute('app_clases');
         }
-    
+
         return $this->render('FormularioAlumno.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-    
-    
 }
-

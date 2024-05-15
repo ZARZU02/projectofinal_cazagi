@@ -58,35 +58,6 @@ class ConsejosController extends AbstractController
 
     }
 
-    
-    #[Route('/consejos/edit/{id}', name: 'consejos_edit')]
-    public function updateconsejos(EntityManagerInterface $entityManager,Request $request, int $id): Response
-    {
-        $Consejos = $entityManager->getRepository(Consejos::class)->find($id);
-
-        if (!$Consejos) {
-            throw $this->createNotFoundException(
-                'No empleado found for id ' . $id
-            );
-        }
-
-        $Consejos->setTitulo('New Consejos name!'); // Replace setSomeProperty() with an actual setter method.
-        $entityManager->flush();
-        $form = $this->createForm(ConsejosType::class, $Consejos); // Assuming you have an EmpleadoType form class
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($Consejos);
-            $entityManager->flush();
-            header("Location:http://localhost:8000/consejos");
-            exit;
-        }
-
-        return $this->render('editconsejos.html.twig', [
-            'form' => $form->createView(),
-        ]);
-       
-      
-    }
+  
     
 }

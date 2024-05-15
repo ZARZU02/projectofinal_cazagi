@@ -26,10 +26,10 @@ class AlumnosType extends AbstractType
                 'choices' => [
                     'Body Combat' => 'Body Combat',
                     'Yoga' => 'Yoga',
-                    'Cycling' => 'Ciclismo',
-                    'Boxing' => 'Boxeo',
-                    'Swimming' => 'Natación',
-                    'Massage' => 'Masaje',
+                    'Ciclismo' => 'Ciclismo',
+                    'Boxeo' => 'Boxeo',
+                    'Natación' => 'Natación',
+                    'Masaje' => 'Masaje',
                 ],
             ])
          
