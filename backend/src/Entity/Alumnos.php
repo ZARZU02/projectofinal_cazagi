@@ -27,20 +27,16 @@ class Alumnos
     #[ORM\Column(length: 255)]
     private ?string $telefono = null;
     
+    
     #[ORM\Column(length: 255)]
     private ?string $deportes = null;
+   
 
-    #[ORM\ManyToMany(targetEntity: Clases::class, mappedBy: 'deporte_alumnos')]
-    private Collection $clase_deporte;
+    #[ORM\ManyToOne(inversedBy: 'alumnos')]
+    private ?Clases $clase = null;
 
 
 
-    public function __construct()
-    {
-        $this->clase_deporte = new ArrayCollection();
-    }
-
-  
 
 
 
@@ -97,32 +93,14 @@ class Alumnos
         return $this;
     }
 
-    
-
-
-    /**
-     * @return Collection<int, Clases>
-     */
-    public function getClaseDeporte(): Collection
+    public function getClase(): ?Clases
     {
-        return $this->clase_deporte;
+        return $this->clase;
     }
 
-    public function addClaseDeporte(Clases $claseDeporte): static
+    public function setClase(?Clases $clase): static
     {
-        if (!$this->clase_deporte->contains($claseDeporte)) {
-            $this->clase_deporte->add($claseDeporte);
-            $claseDeporte->addDeporteAlumno($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClaseDeporte(Clases $claseDeporte): static
-    {
-        if ($this->clase_deporte->removeElement($claseDeporte)) {
-            $claseDeporte->removeDeporteAlumno($this);
-        }
+        $this->clase = $clase;
 
         return $this;
     }
@@ -138,6 +116,11 @@ class Alumnos
 
         return $this;
     }
+
+    
+
+
+  
 
   
         

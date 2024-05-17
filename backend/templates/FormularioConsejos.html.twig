@@ -1,10 +1,25 @@
-
-
 {% block body %}
     <link rel="stylesheet" href="/css/formulario.css">
     {{ form_start(form) }}
     {{ form_row(form.titulo) }}
     {{ form_row(form.descripcion) }}
+    <div id="descripcion-error" style="color: red; display: none;">La descripción no puede exceder los 200 caracteres.</div>
     <button type="submit" class="btn btn-primary">Guardar</button>
     {{ form_end(form) }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var descripcionInput = document.getElementById('form_descripcion');
+            var descripcionError = document.getElementById('descripcion-error');
+
+            descripcionInput.addEventListener('input', function () {
+                if (descripcionInput.value.length > 200) {
+                    descripcionInput.value = descripcionInput.value.substring(0, 200);
+                    descripcionError.style.display = 'block';
+                } else {
+                    descripcionError.style.display = 'none';
+                }
+            });
+        });
+    </script>
 {% endblock %}

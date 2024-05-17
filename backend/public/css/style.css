@@ -1611,39 +1611,54 @@ li {
   text-align: center; /* Alineación a la derecha */
 }
 
-/* Estilos para la sección de consejos */
 #comenzar-entrenar {
+  padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: flex-start;
+  overflow-x: auto;
+  gap: 20px;
+  justify-content: center;
 }
 
-/* Estilos para cada consejo */
 .consejo {
-  width: 300px;
-  margin: 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
+  flex: 0 0 auto; /* Asegura que los elementos no se expandan más allá de su contenido */
+  width: 300px; /* Ajusta el ancho de los consejos según tus necesidades */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  text-align: center; /* Centra el contenido dentro de cada consejo */
+  position: relative; /* Necesario para posicionar el botón de cierre */
 }
 
-/* Estilos para el título del consejo */
 .consejo h2 {
-  font-size: 1.5em;
-  color: #333;
+  margin-top: 0; /* Elimina el margen superior del título */
 }
 
-/* Estilos para la descripción del consejo */
 .consejo p {
-  font-size: 1.1em;
-  color: #666;
+  margin-bottom: 0; /* Elimina el margen inferior del párrafo */
 }
 
-/* Efecto de hover */
-.consejo:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+.img-pequena {
+  width: 20px;
+  height: 20px;
+}
+
+.img {
+  margin-left: 5px; /* Ajustar el espacio entre el campo de búsqueda y la imagen */
+  flex: auto;
+  width: 20px;
+  height: 20px;
+  float: right; /* Hace que la imagen flote a la derecha */
+  margin-bottom: 1.2em; /* Aproximadamente igual a un salto de línea */
 }
