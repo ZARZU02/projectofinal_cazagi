@@ -17,18 +17,18 @@
 		<meta name="author" content="FREEHTML5.CO"/>
 
 		<!-- 
-											//////////////////////////////////////////////////////
-										
-											FREE HTML5 TEMPLATE 
-											DESIGNED & DEVELOPED by FREEHTML5.CO
-												
-											Website: 		http://freehtml5.co/
-											Email: 			info@freehtml5.co
-											Twitter: 		http://twitter.com/fh5co
-											Facebook: 		https://www.facebook.com/fh5co
-										
-											//////////////////////////////////////////////////////
-											 -->
+																																					//////////////////////////////////////////////////////
+																																				
+																																					FREE HTML5 TEMPLATE 
+																																					DESIGNED & DEVELOPED by FREEHTML5.CO
+																																						
+																																					Website: 		http://freehtml5.co/
+																																					Email: 			info@freehtml5.co
+																																					Twitter: 		http://twitter.com/fh5co
+																																					Facebook: 		https://www.facebook.com/fh5co
+																																				
+																																					//////////////////////////////////////////////////////
+																																					 -->
 
 		<!-- Facebook and Twitter integration -->
 		<meta property="og:title" content=""/> <meta property="og:image" content=""/>
@@ -74,8 +74,8 @@
 		<script src="js/modernizr-2.6.2.min.js"></script>
 		<!-- FOR IE9 below -->
 		<!--[if lt IE 9]>
-										      <script src="js/respond.min.js"></script>
-										    <![endif]-->
+																																				      <script src="js/respond.min.js"></script>
+																																				    <![endif]-->
 	</head>
 	<body>
 		<div id="fh5co-wrapper">
@@ -97,17 +97,86 @@
 					</div>
 				</div>
 
-				<h5>Consejos de Deportes:</h5>
 
-				<section id="comenzar-entrenar">
-					{% for consejo in consejos %}
-						<div class="consejo" id="consejo{{ loop.index }}" onclick="resizeText(this)">
-							<span class="close-btn" onclick="cerrarConsejo(this)">x</span>
-							<h2>{{ consejo.titulo }}</h2>
-							<p>{{ consejo.descripcion }}</p>
-						</div>
-					{% endfor %}
-				</section>
+				<style>
+					.descripcion-container {
+						text-align: center;
+					}
+
+					.expandir-btn,
+					.minimizar-btn {
+						margin: 10px auto;
+					}
+				</style>
+<section id="comenzar-entrenar">
+	{% for consejo in consejos %}
+		<div class="consejo" id="consejo{{ loop.index }}">
+			<span class="close-btn" data-id="{{ consejo.id }}">x</span>
+			<h2>{{ consejo.titulo }}</h2>
+			<div class="descripcion-container">
+				<p class="descripcion-short">{{ consejo.descripcion | slice(0, 100) }}...</p>
+				<p class="descripcion-full" style="display: none;">{{ consejo.descripcion }}</p>
+				<button class="expandir-btn">Leer más</button>
+				<button class="minimizar-btn" style="display: none;">Minimizar</button>
+			</div>
+		</div>
+	{% endfor %}
+</section>
+
+<script>
+	document.querySelectorAll('.expandir-btn').forEach(btn => {
+btn.addEventListener('click', function () {
+const descripcionContainer = this.parentElement;
+const descripcionShort = descripcionContainer.querySelector('.descripcion-short');
+const descripcionFull = descripcionContainer.querySelector('.descripcion-full');
+const minimizarBtn = descripcionContainer.querySelector('.minimizar-btn');
+
+descripcionShort.style.display = 'none';
+descripcionFull.style.display = 'block';
+this.style.display = 'none';
+minimizarBtn.style.display = 'block';
+});
+});
+
+document.querySelectorAll('.minimizar-btn').forEach(btn => {
+btn.addEventListener('click', function () {
+const descripcionContainer = this.parentElement;
+const descripcionShort = descripcionContainer.querySelector('.descripcion-short');
+const descripcionFull = descripcionContainer.querySelector('.descripcion-full');
+const expandirBtn = descripcionContainer.querySelector('.expandir-btn');
+
+descripcionShort.style.display = 'block';
+descripcionFull.style.display = 'none';
+this.style.display = 'none';
+expandirBtn.style.display = 'block';
+});
+});
+
+// JavaScript para eliminar el consejo
+document.querySelectorAll('.close-btn').forEach(btn => {
+btn.addEventListener('click', function () {
+const consejoId = this.getAttribute('data-id');
+fetch(`/consejos/delete/${consejoId}`, {
+method: 'DELETE',
+headers: {
+'Content-Type': 'application/json'
+}
+}).then(response => {
+if (response.ok) { // Remover el elemento del DOM
+this.parentElement.remove();
+} else {
+return response.text().then(text => {
+throw new Error(text);
+});
+}
+}).catch(error => {
+console.error('Error al eliminar el consejo:', error);
+alert('No se pudo eliminar el consejo.');
+});
+});
+});
+</script>
+
 
 
 				<div class="consejos">
