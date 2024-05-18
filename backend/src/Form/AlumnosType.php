@@ -9,7 +9,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 
@@ -27,13 +26,12 @@ class AlumnosType extends AbstractType
                 'choices' => [
                     'Body Combat' => 'Body Combat',
                     'Yoga' => 'Yoga',
-                    'Cycling' => 'Ciclismo',
-                    'Boxing' => 'Boxeo',
-                    'Swimming' => 'Natación',
-                    'Massage' => 'Masaje',
+                    'Ciclismo' => 'Ciclismo',
+                    'Boxeo' => 'Boxeo',
+                    'Natación' => 'Natación',
+                    'Masaje' => 'Masaje',
                 ],
             ])
-            ->add('submit', SubmitType::class)
          
         ;
     }

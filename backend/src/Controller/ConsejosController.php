@@ -31,62 +31,24 @@ class ConsejosController extends AbstractController
         ]);
     }
 
-    #[Route('/consejos/delete/{id}', name: 'consejos_delete')]
-    public function deleteconsejos(EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/consejos/delete/{id}', name: 'consejos_delete', methods: ['DELETE'])]
+    public function deleteConsejos(EntityManagerInterface $entityManager, int $id): Response
     {
-        $consejos = $entityManager->getRepository(Consejos::class)->find($id);
-
-        if (!$consejos) {
-            throw $this->createNotFoundException(
-                'No user found for id ' . $id
-            );
-        }
-
-        try {
-            $entityManager->remove($consejos);
-            $entityManager->flush();
-            header("Location: http://localhost:8000/consejos");
-            exit;
-        } catch (\Exception $e) {
-            // Si ocurre un error al intentar eliminar la entidad
-            $errorMessage = "No se pudo eliminar el usuario porque hay una relacion." ;
-            
-            // Imprimir el mensaje de error en lugar de redirigir
-            echo $errorMessage;
-            exit;
-        }
-
-    }
-
+        $consejo = $entityManager->getRepository(Consejos::class)->find($id);
     
-    #[Route('/consejos/edit/{id}', name: 'consejos_edit')]
-    public function updateconsejos(EntityManagerInterface $entityManager,Request $request, int $id): Response
-    {
-        $Consejos = $entityManager->getRepository(Consejos::class)->find($id);
-
-        if (!$Consejos) {
-            throw $this->createNotFoundException(
-                'No empleado found for id ' . $id
-            );
+        if (!$consejo) {
+            return new Response('No se encontró el consejo con el ID ' . $id, 404);
         }
-
-        $Consejos->setTitulo('New Consejos name!'); // Replace setSomeProperty() with an actual setter method.
-        $entityManager->flush();
-        $form = $this->createForm(ConsejosType::class, $Consejos); // Assuming you have an EmpleadoType form class
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($Consejos);
+    
+        try {
+            $entityManager->remove($consejo);
             $entityManager->flush();
-            header("Location:http://localhost:8000/consejos");
-            exit;
+            return new Response('Consejo eliminado con éxito', 200);
+        } catch (\Exception $e) {
+            return new Response('No se pudo eliminar el consejo porque hay una relación.', 400);
         }
-
-        return $this->render('editconsejos.html.twig', [
-            'form' => $form->createView(),
-        ]);
-       
-      
     }
+    
+  
     
 }
